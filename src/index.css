@@ -1,0 +1,316 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light Theme Tokens - Softer Grey */
+    --background: 0 0% 89%;
+    --foreground: 0 0% 5%;
+    --card: 0 0% 92%;
+    --card-foreground: 0 0% 5%;
+    --popover: 0 0% 92%;
+    --popover-foreground: 0 0% 5%;
+    --primary: 0 0% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 85%;
+    --secondary-foreground: 0 0% 5%;
+    --muted: 0 0% 85%;
+    --muted-foreground: 0 0% 35%;
+    --accent: 0 0% 60%;
+    --accent-foreground: 0 0% 5%;
+    --border: 0 0% 75%;
+    --input: 0 0% 75%;
+    --ring: 0 0% 40%;
+    --radius: 1rem;
+    
+    /* Liquid Glass Tokens - Grey */
+    --glass-bg: rgba(227,227,227,0.70);
+    --glass-border: rgba(120,120,120,0.25);
+    --glass-shadow: 0 20px 70px rgba(0,0,0,0.15);
+    --glass-blur: 20px;
+    --noise-opacity: 0.04;
+  }
+
+  .dark {
+    /* Dark Theme Tokens - Black & Silver */
+    --background: 0 0% 8%;
+    --foreground: 0 0% 95%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 0 0% 90%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 0 0% 18%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 0 0% 60%;
+    --accent-foreground: 0 0% 10%;
+    --border: 0 0% 22%;
+    --input: 0 0% 22%;
+    --ring: 0 0% 60%;
+    
+    /* Dark Liquid Glass Tokens - Metallic */
+    --glass-bg: rgba(20,20,20,0.60);
+    --glass-border: rgba(180,180,180,0.20);
+    --glass-shadow: 0 25px 90px rgba(0,0,0,0.50);
+    --glass-blur: 24px;
+    --noise-opacity: 0.06;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Figtree', 'Inter', sans-serif;
+  }
+  html {
+    cursor: default;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  
+  /* Ultra smooth transitions for all interactive elements */
+  a, button, input, textarea, select {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Hide default cursor only on desktop */
+  @media (min-width: 1024px) {
+    body, html {
+      cursor: none;
+    }
+  }
+}
+
+/* Custom Cursor - Minimal Shadow (Desktop Only) */
+.custom-cursor {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+  z-index: 10000;
+  mix-blend-mode: difference;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3),
+              0 0 15px rgba(255, 255, 255, 0.15);
+  display: none;
+}
+
+.custom-cursor-follower {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: none;
+}
+
+/* Show custom cursor only on desktop */
+@media (min-width: 1024px) {
+  .custom-cursor,
+  .custom-cursor-follower {
+    display: block;
+  }
+}
+
+.dark .custom-cursor {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4),
+              0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.dark .custom-cursor-follower {
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+}
+
+/* Cursor hover state - Minimal expansion */
+.cursor-hover .custom-cursor {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.4),
+              0 0 20px rgba(255, 255, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cursor-hover .custom-cursor-follower {
+  width: 50px;
+  height: 50px;
+  opacity: 0.6;
+}
+
+/* Shining Silver Gradient - Enhanced visibility in light mode */
+.silver-gradient {
+  background: linear-gradient(135deg, #606060 0%, #404040 25%, #303030 50%, #505050 75%, #707070 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  padding: 0.1em 0;
+  line-height: 1.2;
+}
+
+.dark .silver-gradient {
+  background: linear-gradient(135deg, #f5f5f5 0%, #d0d0d0 25%, #b8b8b8 50%, #e0e0e0 75%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  padding: 0.1em 0;
+  line-height: 1.2;
+}
+
+/* Directional Gradient Hover - Top Left to Bottom Right */
+.gradient-hover {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, box-shadow;
+}
+
+/* Gradient overlay that moves diagonally */
+.gradient-hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, 
+    rgba(220,220,220,0.3) 0%, 
+    rgba(180,180,180,0.15) 50%, 
+    transparent 100%);
+  background-size: 200% 200%;
+  background-position: 0% 0%;
+  opacity: 0;
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.dark .gradient-hover::before {
+  background: linear-gradient(135deg, 
+    rgba(255,255,255,0.15) 0%, 
+    rgba(200,200,200,0.08) 50%, 
+    transparent 100%);
+  background-size: 200% 200%;
+  background-position: 0% 0%;
+}
+
+/* On hover: gradient moves from top-left to bottom-right */
+.gradient-hover:hover::before {
+  opacity: 1;
+  background-position: 100% 100%;
+}
+
+/* Enhanced Glass Hover - Lift effect */
+.glass-hover {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, box-shadow;
+}
+
+.glass-hover:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 35px 110px rgba(0,0,0,0.25);
+}
+
+.dark .glass-hover:hover {
+  box-shadow: 0 35px 110px rgba(0,0,0,0.7);
+}
+
+/* Smooth button transitions */
+button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, box-shadow;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Noise Overlay Utility */
+.noise-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+  opacity: var(--noise-opacity);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* Starfield Background */
+.starfield::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08) 1px, transparent 1px), 
+                    radial-gradient(circle at 70% 60%, rgba(255,255,255,0.06) 1px, transparent 1px),
+                    radial-gradient(circle at 40% 80%, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 220px 220px, 260px 260px, 300px 300px;
+  pointer-events: none;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar - Silver */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #c0c0c0, #a0a0a0);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #d0d0d0, #b0b0b0);
+}
+
+/* Hide Emergent Badge */
+#emergent-badge,
+a[href*="emergent.sh"][href*="badge"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

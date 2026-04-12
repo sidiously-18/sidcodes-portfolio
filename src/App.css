@@ -1,0 +1,10 @@
+/* Main App Styles - Minimal overrides */
+.App {
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Remove default centered styles */
+.App-header {
+  /* Removed default center alignment */
+}

@@ -66,7 +66,9 @@ const FloatingCosmosHero = () => {
     '/pfp.jpg'
   ];
   const originalImageCount = floatingImages.length - 1;
-  const pfpAngle = (1 / originalImageCount) * Math.PI * 2;
+  // Place PFP between two existing slots so it has a unique angle
+  // while preserving the original image positions.
+  const pfpAngle = (0.5 / originalImageCount) * Math.PI * 2;
 
   useEffect(() => {
     const handleMouseMove = (e) => {

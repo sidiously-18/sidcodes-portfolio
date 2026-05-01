@@ -51,6 +51,7 @@ const FloatingCosmosHero = () => {
   const smoothMouseY = useSpring(mouseY, springConfig);
 
   const floatingImages = [
+    '/pfp.jpg',
     'https://images.unsplash.com/photo-1762951566493-a275fc9f9f48?w=400',
     'https://images.unsplash.com/photo-1772037441269-947195bb80f0?w=400',
     'https://images.unsplash.com/photo-1764204295508-37d89e699266?w=400',

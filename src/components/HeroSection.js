@@ -3,9 +3,9 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import GlassSurface from './GlassSurface';
 
-const FloatingImage = ({ img, index, totalImages, smoothMouseX, smoothMouseY }) => {
-  const angle = (index / totalImages) * Math.PI * 2;
-  const radius = 200 + (index % 3) * 80;
+const FloatingImage = ({ img, index, totalImages, smoothMouseX, smoothMouseY, angleOverride, radiusOverride }) => {
+  const angle = angleOverride ?? (index / totalImages) * Math.PI * 2;
+  const radius = radiusOverride ?? (200 + (index % 3) * 80);
   const baseX = Math.cos(angle) * radius;
   const baseY = Math.sin(angle) * radius;
   
@@ -51,7 +51,6 @@ const FloatingCosmosHero = () => {
   const smoothMouseY = useSpring(mouseY, springConfig);
 
   const floatingImages = [
-    '/pfp.jpg',
     'https://images.unsplash.com/photo-1762951566493-a275fc9f9f48?w=400',
     'https://images.unsplash.com/photo-1772037441269-947195bb80f0?w=400',
     'https://images.unsplash.com/photo-1764204295508-37d89e699266?w=400',
@@ -63,8 +62,11 @@ const FloatingCosmosHero = () => {
     'https://images.unsplash.com/photo-1771942202908-6ce86ef73701?w=400',
     'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=400',
     'https://images.unsplash.com/photo-1763568258266-3794097e5837?w=400',
-    'https://images.unsplash.com/photo-1643951391300-8c303644b40f?w=400'
+    'https://images.unsplash.com/photo-1643951391300-8c303644b40f?w=400',
+    '/pfp.jpg'
   ];
+  const originalImageCount = floatingImages.length - 1;
+  const pfpAngle = (1 / originalImageCount) * Math.PI * 2;
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -89,16 +91,21 @@ const FloatingCosmosHero = () => {
 
   return (
     <div ref={containerRef} className="relative h-full" data-testid="hero-floating-cosmos">
-      {floatingImages.map((img, index) => (
-        <FloatingImage
-          key={index}
-          img={img}
-          index={index}
-          totalImages={floatingImages.length}
-          smoothMouseX={smoothMouseX}
-          smoothMouseY={smoothMouseY}
-        />
-      ))}
+      {floatingImages.map((img, index) => {
+        const isPfpImage = img === '/pfp.jpg';
+        return (
+          <FloatingImage
+            key={index}
+            img={img}
+            index={index}
+            totalImages={originalImageCount}
+            angleOverride={isPfpImage ? pfpAngle : undefined}
+            radiusOverride={isPfpImage ? 320 : undefined}
+            smoothMouseX={smoothMouseX}
+            smoothMouseY={smoothMouseY}
+          />
+        );
+      })}
     </div>
   );
 };

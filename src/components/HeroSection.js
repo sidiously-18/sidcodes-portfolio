@@ -1,116 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import GlassSurface from './GlassSurface';
+import Spline from '@splinetool/react-spline';
 
-const FloatingImage = ({ img, index, totalImages, smoothMouseX, smoothMouseY, angleOverride, radiusOverride }) => {
-  const angle = angleOverride ?? (index / totalImages) * Math.PI * 2;
-  const radius = radiusOverride ?? (200 + (index % 3) * 80);
-  const baseX = Math.cos(angle) * radius;
-  const baseY = Math.sin(angle) * radius;
-  
-  // Create smooth transforms that combine base position with mouse offset
-  const x = useTransform(smoothMouseX, (latest) => baseX + latest * 30);
-  const y = useTransform(smoothMouseY, (latest) => baseY + latest * 30);
-  
-  return (
-    <motion.div
-      className="absolute w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 rounded-2xl overflow-hidden shadow-2xl"
-      initial={{ opacity: 0, scale: 0 }}
-      animate={{
-        opacity: 1,
-        scale: 1,
-      }}
-      transition={{
-        opacity: { duration: 0.8, delay: index * 0.05 },
-        scale: { duration: 0.8, delay: index * 0.05 },
-      }}
-      style={{
-        left: '50%',
-        top: '50%',
-        x,
-        y,
-        willChange: 'transform'
-      }}
-    >
-      <img src={img} alt="" className="w-full h-full object-cover" loading="lazy" />
-    </motion.div>
-  );
-};
-
-const FloatingCosmosHero = () => {
-  const containerRef = useRef(null);
-  
-  // Use Framer Motion's useMotionValue for ultra-smooth animations
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  
-  // Apply spring physics for smooth interpolation - similar to CustomCursor
-  const springConfig = { damping: 25, stiffness: 100, mass: 0.5 };
-  const smoothMouseX = useSpring(mouseX, springConfig);
-  const smoothMouseY = useSpring(mouseY, springConfig);
-
-  const floatingImages = [
-    'https://images.unsplash.com/photo-1762951566493-a275fc9f9f48?w=400',
-    'https://images.unsplash.com/photo-1772037441269-947195bb80f0?w=400',
-    'https://images.unsplash.com/photo-1764204295508-37d89e699266?w=400',
-    'https://images.unsplash.com/photo-1765830287239-43f592de98a8?w=400',
-    'https://images.unsplash.com/photo-1658053283477-b985256569bc?w=400',
-    'https://images.unsplash.com/photo-1487338875411-8880f74114a2?w=400',
-    'https://images.unsplash.com/photo-1760536928911-40831dacdbc3?w=400',
-    'https://images.unsplash.com/photo-1487523117656-d5d117ad47c5?w=400',
-    'https://images.unsplash.com/photo-1771942202908-6ce86ef73701?w=400',
-    'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=400',
-    'https://images.unsplash.com/photo-1763568258266-3794097e5837?w=400',
-    'https://images.unsplash.com/photo-1643951391300-8c303644b40f?w=400',
-    '/pfp.jpg'
-  ];
-  const originalImageCount = floatingImages.length - 1;
-  // Place PFP between two existing slots so it has a unique angle
-  // while preserving the original image positions.
-  const pfpAngle = (0.5 / originalImageCount) * Math.PI * 2;
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        // Normalize mouse position to -1 to 1 range
-        const normalizedX = (e.clientX - rect.left - rect.width / 2) / rect.width;
-        const normalizedY = (e.clientY - rect.top - rect.height / 2) / rect.height;
-        
-        // Update motion values directly (no React state, no re-renders)
-        mouseX.set(normalizedX);
-        mouseY.set(normalizedY);
-      }
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, [mouseX, mouseY]);
-
-  return (
-    <div ref={containerRef} className="relative h-full" data-testid="hero-floating-cosmos">
-      {floatingImages.map((img, index) => {
-        const isPfpImage = img === '/pfp.jpg';
-        return (
-          <FloatingImage
-            key={index}
-            img={img}
-            index={index}
-            totalImages={originalImageCount}
-            angleOverride={isPfpImage ? pfpAngle : undefined}
-            radiusOverride={isPfpImage ? 320 : undefined}
-            smoothMouseX={smoothMouseX}
-            smoothMouseY={smoothMouseY}
-          />
-        );
-      })}
-    </div>
-  );
-};
 
 const HeroSection = () => {
   const scrollToContact = () => {
@@ -134,7 +27,7 @@ const HeroSection = () => {
       <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           {/* Left: Content */}
-          <div className="lg:col-span-6 space-y-8">
+          <div className="lg:col-span-6 space-y-8 relative z-20">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -205,9 +98,13 @@ const HeroSection = () => {
             </motion.div>
           </div>
 
-          {/* Right: Floating Cosmos */}
-          <div className="lg:col-span-6 h-[400px] lg:h-[600px] hidden md:block">
-            <FloatingCosmosHero />
+          {/* Right: Spline 3D Model */}
+          <div className="lg:col-span-6 h-[400px] lg:h-[600px] hidden md:block relative z-10">
+            <div className="absolute inset-[-20%]">
+              <div className="w-full h-full scale-[1.25] translate-y-[15%]">
+                <Spline scene="https://prod.spline.design/uRllOoFxsndrPqdU/scene.splinecode" />
+              </div>
+            </div>
           </div>
         </div>
       </div>

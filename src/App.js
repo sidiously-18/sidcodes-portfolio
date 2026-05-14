@@ -8,6 +8,7 @@ import AboutSection from "@/components/AboutSection";
 import SkillsSection from "@/components/SkillsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
+import Spline from '@splinetool/react-spline';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -33,7 +34,10 @@ function App() {
   }, []);
 
   return (
-    <div className="App min-h-screen">
+    <div className="App min-h-screen relative">
+      <div className="fixed inset-0 -z-10 w-full h-full pointer-events-none">
+        <Spline scene="https://prod.spline.design/WyPtohrI3arvMG6Z/scene.splinecode" />
+      </div>
       <CustomCursor />
       <SectionNav />
       <main>
